@@ -1,0 +1,2 @@
+recursive-include jupyter_mapd_charting/static *.*
+include jupyter_mapd_charting.json

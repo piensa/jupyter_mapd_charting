@@ -1,0 +1,38 @@
+{
+  "name": "jupyter_mapd_charting",
+  "version": "0.0.1",
+  "description": "A Custom Jupyter Widget Library",
+  "author": "lennin",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com//jupyter_mapd_charting.git"
+  },
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/",
+    "prepublish": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "remove_ex": "jupyter nbextension uninstall --py --sys-prefix jupyter_mapd_charting",
+    "setup": "cd ../ && python setup.py build && pip install -e .",
+    "install_new": "jupyter nbextension install --py --symlink --sys-prefix jupyter_mapd_charting && jupyter nbextension enable --py --sys-prefix jupyter_mapd_charting",
+    "build": "npm run remove_ex && npm run setup && npm run install_new"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.1"
+  },
+  "dependencies": {
+    "@jupyter-widgets/base": "^1.0.0",
+    "britecharts": "^2.8.6",
+    "d3": "^5.1.0",
+    "lodash": "^4.17.4",
+    "underscore": "^1.9.0",
+    "webpack": "^3.10.0"
+  },
+  "jupyterlab": {
+    "extension": "lib/labplugin"
+  }
+}
