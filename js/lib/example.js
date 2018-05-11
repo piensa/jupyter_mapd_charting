@@ -20,19 +20,61 @@ var BarChartModel = widgets.DOMWidgetModel.extend({
 // Custom View. Renders the widget model.
 var BarChartView = widgets.DOMWidgetView.extend({
     render: function() {
-        // this.value_changed();
-        // this.model.on('change:value', this.value_changed, this);
 
-        var container = d3.select(this.el);
-        container.html("FIRST LINE <br> SECOND LINE");
-        var data = this.model.get("_model_data");
-        console.log('lo que imprimio', data);
+        const data = this.getData(this.model.get('_model_data'));
+
+        console.log('data', data);
+
+        const container = d3.select(this.el);
+        const margin = ({top: 20, right: 0, bottom: 30, left: 40});
+        const height = 400;
+        const width = 700;
+
+        const x = d3.scaleBand()
+            .domain(data.map(d => d.name))
+            .range([margin.left, width - margin.right])
+            .padding(0.1);
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)]).nice()
+            .range([height - margin.bottom, margin.top]);
+
+        const svg = container.append('svg').attr("width", width).attr("height", height);
+
+        svg.append("g")
+            .attr("fill", "steelblue")
+        .selectAll("rect").data(data).enter().append("rect")
+            .attr("x", d => x(d.name))
+            .attr("y", d => y(d.value))
+            .attr("height", d => y(0) - y(d.value))
+            .attr("width", x.bandwidth());
+
+        const xAxis = g => g
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        const yAxis = g => g
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y))
+            .call(g => g.select(".domain").remove());
+
+        svg.append("g").call(xAxis);
+
+        svg.append("g").call(yAxis);
     },
+    getData: function (data) {
+        if (!data) {
+            return [];
+        }
 
-    // value_changed: function() {
-    //     this.el.textContent = this.model.get('value');
-    // }
+        data.columns = Object.keys(data[0]);
+
+        return data.slice()
+          .sort((a, b) => b.frequency - a.frequency)
+          .map(({letter, frequency}) => ({name: letter, value: frequency}));
+    }
 });
+
+
 
 
 module.exports = {

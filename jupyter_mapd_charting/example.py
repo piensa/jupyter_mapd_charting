@@ -4,7 +4,7 @@ from traitlets import default
 from traitlets import List
 
 @widgets.register
-class HelloWorld(widgets.DOMWidget):
+class BarChart(widgets.DOMWidget):
     """An example widget."""
     _view_name = Unicode('BarChartView').tag(sync=True)
     _model_name = Unicode('BarChartModel').tag(sync=True)
